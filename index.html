@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emotional Cinema</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #f7fbff, #eaf4f8);
+    color: #2b2d42;
+    text-align: center;
+}
+
+.container {
+    padding: 40px 20px;
+}
+
+h1 {
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+
+p {
+    opacity: 0.7;
+}
+
+textarea {
+    width: 80%;
+    max-width: 450px;
+    height: 100px;
+    padding: 15px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    resize: none;
+    font-size: 15px;
+    outline: none;
+    margin-top: 20px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 25px;
+    border-radius: 25px;
+    border: none;
+    background-color: #bde0fe;
+    color: #1d3557;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #a2d2ff;
+    transform: scale(1.05);
+}
+
+.hidden {
+    display: none;
+}
+
+.fade {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.movie-card {
+    background: white;
+    margin: 25px auto;
+    padding: 20px;
+    width: 95%;
+    max-width: 600px;
+    border-radius: 20px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.05);
+}
+
+iframe {
+    width: 100%;
+    height: 315px;
+    border-radius: 15px;
+}
+
+.back-btn {
+    background-color: #cdb4db;
+    margin-top: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background Piano Music -->
+<audio id="bgMusic" loop>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9c0e4f6c9c.mp3?filename=soft-piano-ambient-110397.mp3" type="audio/mp3">
+</audio>
+
+<div class="container fade" id="home">
+    <h1>Emotional Cinema</h1>
+    <p>Tell me how you feel. Cinema will respond.</p>
+
+    <textarea id="emotionInput" placeholder="Write how you're feeling today..."></textarea>
+    <br>
+    <button onclick="analyzeEmotion()">Discover</button>
+</div>
+
+<div class="container hidden" id="emotionPage">
+    <h1 id="emotionTitle"></h1>
+    <div id="movies"></div>
+    <button class="back-btn" onclick="goBack()">Back</button>
+</div>
+
+<script>
+
+const emotionMovies = {
+
+"Happy": [
+{title: "Zootopia", id: "jWM0ct-OLsM"},
+{title: "Crazy Stone", id: "WSkoLUx03tg"},
+{title: "Lost in Thailand", id: "CyYdXpNpxlU"},
+{title: "Hands Up", id: "uPUbjP0ab3Y"}
+],
+
+"Sad": [
+{title: "Cry Me a Sad River", id: "TWpaVd-0nMk"},
+{title: "Time Still Turns the Pages", id: "0k8VPd1W5BQ"},
+{title: "Memories of Matsuko", id: "h5YiO1kSZdQ"},
+{title: "Hachi: A Dog's Tale", id: "QYzHJyry9Cs"}
+],
+
+"Warm": [
+{title: "The Bucket List", id: "vc3mkG21ob4"},
+{title: "The Secret Life of Walter Mitty", id: "QD6cy4PBQPI"},
+{title: "Soul", id: "nKBEcUkHeCo"},
+{title: "Me Before You", id: "T0MmkG_nG1U"}
+],
+
+"Romantic": [
+{title: "The Curious Case of Benjamin Button", id: "lqijVXvw7_E"},
+{title: "About Time", id: "7OIFdWk83no"},
+{title: "Titanic", id: "CHekzSiZjrY"},
+{title: "Love Actually", id: "z9vGoj449s4"}
+],
+
+"Lonely": [
+{title: "Her", id: "ne6p6MfLBxc"},
+{title: "Detachment", id: "w7lBleOF9Pw"},
+{title: "Manchester by the Sea", id: "gsVoD0pTge0"},
+{title: "A Man Called Ove", id: "eFYUX9l-m5I"}
+],
+
+"Relaxed": [
+{title: "The Parent Trap", id: "PMAhVpgzmRU"},
+{title: "Paddington", id: "W5tUEw4Nq4E"},
+{title: "Detective Chinatown", id: "gByBZsWSeB8"},
+{title: "Alvin and the Chipmunks", id: "0BwLNc1KyDQ"}
+],
+
+"Hopeful": [
+{title: "The Intouchables", id: "34WIbmXkewU"},
+{title: "Wonder", id: "FCmLeI06H-I"},
+{title: "The Pursuit of Happyness", id: "DMOBlEcRuw8"},
+{title: "Flying Colors", id: "OSoAx0VXV_c"}
+]
+
+};
+
+function detectEmotion(text) {
+text = text.toLowerCase();
+
+if (text.match(/happy|joy|great|excited|fun/)) return "Happy";
+if (text.match(/sad|cry|heartbroken|pain|miss/)) return "Sad";
+if (text.match(/love|warm|grateful|comfort/)) return "Warm";
+if (text.match(/romantic|in love|relationship/)) return "Romantic";
+if (text.match(/alone|lonely|empty|isolated/)) return "Lonely";
+if (text.match(/calm|chill|relaxed|easy/)) return "Relaxed";
+if (text.match(/hope|future|believe|strong|inspire/)) return "Hopeful";
+
+return "Warm";
+}
+
+function analyzeEmotion() {
+const input = document.getElementById("emotionInput").value.trim();
+if (!input) {
+alert("Please write something about how you feel.");
+return;
+}
+
+document.getElementById("bgMusic").play();
+const emotion = detectEmotion(input);
+showEmotion(emotion);
+}
+
+function showEmotion(emotion) {
+document.getElementById("bgMusic").pause();
+document.getElementById("bgMusic").currentTime = 0;
+
+document.getElementById("home").classList.add("hidden");
+document.getElementById("emotionPage").classList.remove("hidden");
+document.getElementById("emotionTitle").innerText = emotion + " Moments";
+
+const moviesDiv = document.getElementById("movies");
+moviesDiv.innerHTML = "";
+
+emotionMovies[emotion].forEach(movie => {
+moviesDiv.innerHTML += `
+<div class="movie-card fade">
+<h3>${movie.title}</h3>
+<iframe src="https://www.youtube.com/embed/${movie.id}" 
+frameborder="0" 
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+allowfullscreen>
+</iframe>
+</div>
+`;
+});
+}
+
+function goBack() {
+document.getElementById("emotionPage").classList.add("hidden");
+document.getElementById("home").classList.remove("hidden");
+}
+
+</script>
+
+</body>
+</html>
