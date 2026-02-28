@@ -171,17 +171,44 @@ const emotionMovies = {
 };
 
 function detectEmotion(text) {
-text = text.toLowerCase();
+    text = text.toLowerCase();
 
-if (text.match(/happy|joy|great|excited|fun/)) return "Happy";
-if (text.match(/sad|cry|heartbroken|pain|miss/)) return "Sad";
-if (text.match(/love|warm|grateful|comfort/)) return "Warm";
-if (text.match(/romantic|in love|relationship/)) return "Romantic";
-if (text.match(/alone|lonely|empty|isolated/)) return "Lonely";
-if (text.match(/calm|chill|relaxed|easy/)) return "Relaxed";
-if (text.match(/hope|future|believe|strong|inspire/)) return "Hopeful";
+    const emotionKeywords = {
+        "Happy": ["happy","joy","great","excited","fun","amazing","good","wonderful","laugh"],
+        "Sad": ["sad","cry","heartbroken","pain","miss","hurt","loss","tired"],
+        "Warm": ["love","warm","grateful","comfort","touched","kind","family"],
+        "Romantic": ["romantic","in love","relationship","date","kiss"],
+        "Lonely": ["alone","lonely","empty","isolated","nobody","quiet"],
+        "Relaxed": ["calm","chill","relaxed","easy","peaceful","slow"],
+        "Hopeful": ["hope","future","believe","strong","inspire","dream","better"]
+    };
 
-return "Warm";
+    let scores = {};
+
+    for (let emotion in emotionKeywords) {
+        scores[emotion] = 0;
+        emotionKeywords[emotion].forEach(word => {
+            if (text.includes(word)) {
+                scores[emotion]++;
+            }
+        });
+    }
+
+    let maxScore = 0;
+    let detectedEmotion = null;
+
+    for (let emotion in scores) {
+        if (scores[emotion] > maxScore) {
+            maxScore = scores[emotion];
+            detectedEmotion = emotion;
+        }
+    }
+
+    if (maxScore === 0) {
+        return "Warm"; // or change to "Hopeful" if you prefer
+    }
+
+    return detectedEmotion;
 }
 
 function analyzeEmotion() {
