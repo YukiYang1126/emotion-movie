@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emotional Movie Moments</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #f6f9fc, #e9f1f7);
+    color: #333;
+    text-align: center;
+}
+
+.container {
+    padding: 40px 20px;
+}
+
+h1 {
+    font-weight: 300;
+    margin-bottom: 30px;
+}
+
+input {
+    padding: 12px;
+    width: 70%;
+    max-width: 300px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    outline: none;
+    font-size: 16px;
+}
+
+button {
+    margin: 8px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    background-color: #a8dadc;
+    color: #1d3557;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #88c9cc;
+    transform: scale(1.05);
+}
+
+.emotion-grid {
+    margin-top: 25px;
+}
+
+.hidden {
+    display: none;
+}
+
+.fade {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.clip-card {
+    background: white;
+    margin: 15px auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.back-btn {
+    background-color: #cdb4db;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container fade" id="home">
+    <h1>Emotional Movie Moments</h1>
+    <p>Type how you feel. Let cinema speak for you.</p>
+
+    <input type="text" id="emotionInput" placeholder="Happy, Angry, Sad...">
+    <br>
+    <button onclick="goToEmotion()">Enter</button>
+
+    <div class="emotion-grid">
+        <button onclick="showEmotion('Happy')">Happy</button>
+        <button onclick="showEmotion('Angry')">Angry</button>
+        <button onclick="showEmotion('Melancholy')">Melancholy</button>
+        <button onclick="showEmotion('Sad')">Sad</button>
+        <button onclick="showEmotion('Lonely')">Lonely</button>
+        <button onclick="showEmotion('Warm')">Warm</button>
+        <button onclick="showEmotion('Relaxed')">Relaxed</button>
+    </div>
+</div>
+
+<div class="container hidden" id="emotionPage">
+    <h1 id="emotionTitle"></h1>
+    <div id="clips"></div>
+    <button class="back-btn" onclick="goBack()">Back</button>
+</div>
+
+<script>
+
+const emotionClips = {
+    "Happy": ["Joyful Reunion", "Victory Moment", "Dancing in the Rain"],
+    "Angry": ["Breaking Point", "Powerful Confrontation", "Emotional Release"],
+    "Melancholy": ["Quiet Window Scene", "Late Night Reflection", "Bittersweet Goodbye"],
+    "Sad": ["Tears in Silence", "Farewell Scene", "Loss and Memory"],
+    "Lonely": ["City at Night", "Empty Train Ride", "Waiting Alone"],
+    "Warm": ["Family Hug", "Soft Smile", "Golden Sunset Talk"],
+    "Relaxed": ["Ocean Breeze", "Road Trip Freedom", "Morning Coffee Peace"]
+};
+
+function goToEmotion() {
+    const input = document.getElementById("emotionInput").value.trim();
+    if (emotionClips[input]) {
+        showEmotion(input);
+    } else {
+        alert("Emotion not found. Please choose from the list.");
+    }
+}
+
+function showEmotion(emotion) {
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("emotionPage").classList.remove("hidden");
+    document.getElementById("emotionPage").classList.add("fade");
+
+    document.getElementById("emotionTitle").innerText = emotion + " Moments";
+
+    const clipsDiv = document.getElementById("clips");
+    clipsDiv.innerHTML = "";
+
+    emotionClips[emotion].forEach(title => {
+        clipsDiv.innerHTML += `
+            <div class="clip-card fade">
+                <h3>${title}</h3>
+                <p>Content coming soon...</p>
+                <!-- Future video structure -->
+                <!--
+                <video width="100%" controls>
+                    <source src="your-video-link.mp4" type="video/mp4">
+                </video>
+                -->
+            </div>
+        `;
+    });
+}
+
+function goBack() {
+    document.getElementById("emotionPage").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+}
+
+</script>
+
+</body>
+</html>
