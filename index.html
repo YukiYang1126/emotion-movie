@@ -174,13 +174,13 @@ function detectEmotion(text) {
     text = text.toLowerCase();
 
     const emotionKeywords = {
-        "Happy": ["happy","joy","great","excited","fun","amazing","good","wonderful","laugh"],
-        "Sad": ["sad","cry","heartbroken","pain","miss","hurt","loss","tired"],
-        "Warm": ["love","warm","grateful","comfort","touched","kind","family"],
+        "Happy": ["happy","joy","great","excited","fun","amazing","good","wonderful","laugh","satisfied"],
+        "Sad": ["sad","cry","heartbroken","pain","miss","hurt","loss","tired","sleepy","depressed"],
+        "Warm": ["love","warm","grateful","comfort","touched","kind","family","comfortable","gentle","healing"],
         "Romantic": ["romantic","in love","relationship","date","kiss"],
-        "Lonely": ["alone","lonely","empty","isolated","nobody","quiet"],
-        "Relaxed": ["calm","chill","relaxed","easy","peaceful","slow"],
-        "Hopeful": ["hope","future","believe","strong","inspire","dream","better"]
+        "Lonely": ["alone","lonely","empty","isolated","nobody","quiet","wronged"],
+        "Relaxed": ["calm","chill","relaxed","easy","peaceful","slow","composed"],
+        "Hopeful": ["hope","future","believe","strong","inspire","dream","better","Optimistic"]
     };
 
     let scores = {};
